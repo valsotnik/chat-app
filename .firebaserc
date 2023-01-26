@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "getstreamio-cmval": {
+      "hosting": {
+        "chat-app": [
+          "getstreamio-cmval"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "getstreamio-cmval"
+  }
+}
