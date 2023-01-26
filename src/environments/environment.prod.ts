@@ -8,5 +8,6 @@ export const environment = {
     messagingSenderId: '162375529037',
     measurementId: 'G-BWHSXL9Y0V',
   },
-  production: true
+  production: true,
+  apiURL: 'https://us-central1-getstreamio-cmval.cloudfunctions.net'
 };
