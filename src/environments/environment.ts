@@ -13,7 +13,10 @@ export const environment = {
     measurementId: 'G-BWHSXL9Y0V',
   },
   production: false,
-  apiURL: 'https://us-central1-getstreamio-cmval.cloudfunctions.net'
+  apiURL: 'https://us-central1-getstreamio-cmval.cloudfunctions.net',
+  stream: {
+    key: 'kgtfk55urnqb'
+  }
 };
 
 /*

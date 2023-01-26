@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Auth, authState, signInWithEmailAndPassword, updateProfile } from '@angular/fire/auth';
 import { createUserWithEmailAndPassword } from '@firebase/auth';
-import { BehaviorSubject, forkJoin, from, switchMap } from 'rxjs';
+import { BehaviorSubject, forkJoin, from, pluck, switchMap } from 'rxjs';
 import { SigninCredentials, SignupCredentials } from './auth.model';
 import { environment } from './../../../environments/environment'
 
@@ -16,6 +16,17 @@ export class AuthService {
   readonly isLoggedIn$ = authState(this.auth) // imported from fire package function
 
   constructor(private auth: Auth, private http: HttpClient) { }
+
+  public getCurrentUser () {
+    return this.auth.currentUser!;
+  }
+
+  public getToken() {
+    return this.http.post<{ token: string }>(
+      `${environment.apiURL}/createToken`,
+      {user: this.getCurrentUser()}
+      ).pipe(pluck('token'))
+  }
 
   public signIn({ email, password}: SigninCredentials) {
     // return Promise, then we wrap with from() operator to create an Observable

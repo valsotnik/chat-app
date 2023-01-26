@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,7 +27,8 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
     MatButtonModule,
     ChatModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth())
+    provideAuth(() => getAuth()),
+    TranslateModule.forRoot()
   ],
   providers: [
     {
