@@ -1,6 +1,8 @@
+import { Router } from '@angular/router';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-signin',
@@ -12,18 +14,24 @@ export class SigninComponent implements OnInit {
 
   public form!: FormGroup;
 
-  constructor(private auth: AuthService) { }
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private snackbar: MatSnackBar,
+    private fb: FormBuilder) { }
 
   public ngOnInit(): void {
-    this.form = new FormGroup({
-      email: new FormControl('', [Validators.email]),
-      password: new FormControl('', [Validators.minLength(6)]),
+    this.form = this.fb.group({
+      email: ['', [Validators.email]],
+      password: ['', [Validators.minLength(6)]]
     })
   }
 
   public signIn() {
-    console.log('signin with: ', this.form);
-    this.auth.signIn(this.form.value);
+    this.auth.signIn(this.form.value).subscribe({
+      next: () => this.router.navigate(['chat']),
+      error: (error) => this.snackbar.open(error.message)
+    });
   }
 
 }
