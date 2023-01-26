@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Auth, authState, updateProfile } from '@angular/fire/auth';
 import { createUserWithEmailAndPassword } from '@firebase/auth';
-import { BehaviorSubject, from, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject, from, switchMap } from 'rxjs';
 import { SignupCredentials } from './auth.model';
 
 @Injectable({
@@ -25,5 +25,10 @@ export class AuthService {
       // after creating of user switch on updateProfile function wich add displayName
       switchMap(({ user }) => updateProfile(user, { displayName }))
     );
+  }
+
+  public signOut() {
+    // return Promise, then we wrap with from() operator to create an Observable
+    return from(this.auth.signOut());
   }
 }
