@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ChatClientService, ChannelService, StreamI18nService } from 'stream-chat-angular';
 import { AuthService } from './../../auth/auth.service';
 import { environment } from './../../../../environments/environment';
-import { switchMap } from 'rxjs';
+import { catchError, map, Observable, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-chat-page',
@@ -12,6 +12,8 @@ import { switchMap } from 'rxjs';
 })
 export class ChatPageComponent implements OnInit {
 
+  public isChatReady$!: Observable<boolean>;
+
   constructor(
     private chatService: ChatClientService,
     private channelService: ChannelService,
@@ -20,14 +22,19 @@ export class ChatPageComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.auth.getToken().pipe(
-      switchMap((token) => this.chatService.init(
+    this.streamI18nService.setTranslation();
+    this.isChatReady$ = this.auth.getToken().pipe(
+      switchMap((streamToken) => this.chatService.init(
         environment.stream.key,
         this.auth.getCurrentUser().uid,
-        token
-      ))
+        streamToken
+      )),
+      switchMap(() => this.channelService.init({
+        type: 'messaging',
+        members: { $in: [this.auth.getCurrentUser().uid] },
+      })),
+      map(() => true),
+      catchError(() => of(false))
     )
-    this.streamI18nService.setTranslation();
   }
-
 }
