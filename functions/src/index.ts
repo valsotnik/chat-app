@@ -47,5 +47,23 @@ export const createToken = functions.https.onRequest((request, response) => {
       }
     }
   })
+})
 
-});
+
+export const revokeUserToken = functions.https.onRequest((request, response) => {
+  cors(request, response, async () => {
+    const { user } = request.body;
+    if (!user) {
+      throw new functions.https.HttpsError('failed-precondition', 'Bad Request');
+    } else {
+      try {
+        await serverStreamClient.revokeUserToken(user.uid);
+        response.status(200).send({})
+
+      } catch (error) {
+        throw new functions.https.HttpsError('aborted', 'Could not create a chat user');
+      }
+    }
+  })
+})
+
