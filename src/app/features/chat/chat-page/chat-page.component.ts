@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ChatClientService, ChannelService, StreamI18nService } from 'stream-chat-angular';
 import { AuthService } from './../../auth/auth.service';
 import { environment } from './../../../../environments/environment';
-import { catchError, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, from, map, Observable, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-chat-page',
@@ -36,5 +36,19 @@ export class ChatPageComponent implements OnInit {
       map(() => true),
       catchError(() => of(false))
     )
+  }
+
+  public onCreate(name: string) {
+    const dashName = name.replace(/\s+/g, '-').toLowerCase();
+    const channel = this.chatService.chatClient.channel(
+      'messaging',
+      dashName,
+      {
+        name,
+        members: [this.auth.getCurrentUser().uid]
+      }
+    );
+
+    from(channel.create());
   }
 }
