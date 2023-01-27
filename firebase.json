@@ -3,7 +3,9 @@
     "target": "chat-app",
     "public": "dist/chat-app",
     "ignore": [
-      "**/.*"
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
     ],
     "headers": [
       {

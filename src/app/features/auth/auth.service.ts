@@ -49,7 +49,13 @@ export class AuthService {
   }
 
   public signOut() {
+    const user = this.auth.currentUser;
     // return Promise, then we wrap with from() operator to create an Observable
-    return from(this.auth.signOut());
+    return from(this.auth.signOut()).pipe(
+      switchMap(() => this.http.post(
+        `${environment.apiURL}/revokeUserToken`,
+        { user }
+      ))
+    );
   }
 }
